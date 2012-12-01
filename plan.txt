@@ -1,0 +1,3 @@
+1. Read in data
+2. Data is in a list of dictionaries.
+
