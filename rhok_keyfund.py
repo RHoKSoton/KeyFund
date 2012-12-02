@@ -40,6 +40,24 @@ def listBigFile(filename, my_list):
         d = dict(line)
         my_list.append(d)
 
+#def extract_location(filename, location_dict):
+#    """Return {nexy: [(latt, longt),]"""
+#    f = open(filename)
+#    for line in csv.reader(f):
+#        if line[0][0] == 'G':
+#            pass
+#        else:
+#            temp = []
+#            lead_block = line[0][:-3].strip().lower()
+#            latt = line[1]
+#            longt = line[2]
+#            coord = (latt, longt)
+#            if location_dict.has_key(lead_block):
+#                location_dict[lead_block].append(coord)
+#            else:
+#                location_dict[lead_block] = [coord]
+
+
 def count_list_dict_item(in_list_dict, item):
     """Return frequency of key"""
     hist = {}
@@ -48,18 +66,26 @@ def count_list_dict_item(in_list_dict, item):
         hist[key] = hist.get(key, 0) + 1
     return hist
 
-def location_add(in_list_dict, item, location_dict):
-    """Add Longitude and Latitude data and return updated list_dictionary
+#def add_lat_longt(dict_field,latt,longt):
+#    dict_field['latt'] = latt
+#    dict_field['longt'] = longt
+
+#def location_add(filename, in_list_dict, item, location_dict):
+#    """Add Longitude and Latitude data and return updated list_dictionary
     
-location dict"""
-    for i in_list_dict:
-        postcode = i.get(item)
-        lead_block = postcode[:-3].strip()
-
-
-
-
-
+#location dict"""
+#    for i in in_list_dict:
+#        postcode = i.get(item)
+#        lead_block = postcode[:-3].strip()
+#        file_prefix = lead_block[:2].lower()
+#        if location_dict.has_key(file_prefix):
+#            add_lat_long(i, location_dict[file_prefix][0][0],
+#                         location_dict[file_prefix][0][1])
+#        else:
+#            extract_location(filename,location_dict)
+#            print(location_dict)
+#            #add_lat_longt(i, location_dict[file_prefix][0][0],
+#             #            location_dict[file_prefix][0][1])
 
 
 
@@ -113,7 +139,6 @@ def plot_question(output_hist, query_number, fields):
     else:
         exit()
     
-
 def main():
     try:
         filename = sys.argv[1]
@@ -132,6 +157,9 @@ def main():
         value_fields.append((key_val, num))
     fields_dict = dict(fields)
     key_values_dict = dict(value_fields)
+    new_dict = {}
+    location_add(filename, my_list,fields_dict.get(5),new_dict)
+
     #print(fields_dict)
 
     #print('No. records: ', len(my_list))
@@ -142,12 +170,6 @@ def main():
     #for k  in enumerate(my_list[1].keys()):
     #    print(k,)
 
-    #print(fields_dict[11])
-    age_freq = count_list_dict_item(my_list, fields_dict[11])
-#    print(age_freq)
-
-    age_pmf = pmf(age_freq, my_list)
-#    print(age_pmf)
 
     #plot_age = rhok_hist_plot.get_data(age_freq)
 
@@ -156,7 +178,7 @@ def main():
     #gender_test = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
     #gender_test = count_list_dict_item(my_list, fields_dict[7])
     #print(gender_test)
-
+    """
     query_number = program_prompt(fields)
     if fields_dict.get(query_number) == 'ISMALE':
         output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
@@ -165,6 +187,11 @@ def main():
             output_hist = count_list_dict_item(my_list,fields_dict[query_number])
     plot_question(output_hist, query_number, fields)
     print(output_hist)
+    """
+
+    
+    
+
 
 if __name__ == '__main__':
     main()
