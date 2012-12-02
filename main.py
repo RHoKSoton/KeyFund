@@ -36,10 +36,10 @@ class GetData(webapp2.RequestHandler):
         # Process data
         sex = self.request.get("sex")
         # Get postcode from data set
-        json_response = ""
+        json_response = "aa"
         count = 0
         
-        if (sex == "Both"):
+        if (sex == "both"):
             json_response =  Data.datas
         else:
             for data in Data.datas:
