@@ -83,7 +83,22 @@ def program_prompt(record_list):
         except ValueError:
             program_prompt(record_list)
 
+def question(fields):
+    question = raw_input("\nTry again (Y, n, q)?: ")
+    if question.lower() == 'y':
+        program_prompt(fields)
+    else:
+        exit()
 
+def plot_question(output_hist, query_number, fields):
+    question = raw_input("\nWould you like to plot a histogram (Y, n, q)?: ")
+    if question.lower() == 'y':
+        rhok_hist_plot.plot_hist(output_hist, fields[query_number], 'Frequency')
+    elif question.lower() == 'n':
+        print(output_hist)
+    else:
+        exit()
+    
 
 def main():
     try:
@@ -128,7 +143,15 @@ def main():
     #gender_test = count_list_dict_item(my_list, fields_dict[7])
     #print(gender_test)
 
-    program_prompt(fields)
+    query_number = program_prompt(fields)
+    if fields_dict.get(query_number) == 'ISMALE':
+        output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
+    else: 
+        if fields_dict.get(query_number) != None:
+            output_hist = count_list_dict_item(my_list,fields_dict[query_number])
+    plot_question(output_hist, query_number, fields)
+    print(output_hist)
+        
 
 
 

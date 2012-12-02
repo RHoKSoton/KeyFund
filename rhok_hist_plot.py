@@ -41,7 +41,7 @@ def plot_hist(hist_dict, x_item_label, frequency_label):
         x_labels.append(x)
         
         N = len(x_labels)      
-        ind = np.arange(N)      # x locations for the groups  
+        ind = np.arange(N) + 1      # x locations for the groups  
 
 
         y_data.append(y)
@@ -50,7 +50,7 @@ def plot_hist(hist_dict, x_item_label, frequency_label):
 
     rects = ax.bar(ind,y_array, bar_width, align = 'center')
 
-    ax.set_xlabel(x_item_label)
+    ax.set_xlabel(x_item_label[1])
     ax.set_ylabel(frequency_label)
     ax.set_xticks(ind)
     if len(str(x_labels[-1])) < 3:
@@ -63,12 +63,4 @@ def plot_hist(hist_dict, x_item_label, frequency_label):
 
     plt.axis([0,N+1,0,y_max])
     plt.show()
-
-
-
-
-
-
-
-
 
