@@ -1,0 +1,92 @@
+<!-- 
+<html>
+  <body>
+    {% for greeting in greetings %}
+      {% if greeting.author %}
+        <b>{{ greeting.author }}</b> wrote:
+      {% else %}
+        An anonymous person wrote:
+      {% endif %}
+      <blockquote>{{ greeting.content|escape }}</blockquote>
+    {% endfor %}
+    <form action="/sign" method="post">
+      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+    <a href="{{ url }}">{{ url_linktext }}</a>
+  </body>
+</html>
+ -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	
+	<link rel="stylesheet" type="text/css" href="/assets/stylesheets/main.css">
+	
+	<script src="assets/js/jquery-1.8.3.min.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/data.js"></script>
+	
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXfUdof0YnE078ZwN8RvbqNr52d1DVsmc&sensor=true"></script>
+
+    
+    <script language="JavaScript">
+			function ShowHide(divId) {
+				if(document.getElementById(divId).style.display == 'none') {
+					document.getElementById(divId).style.display='block';
+				} else {
+					document.getElementById(divId).style.display = 'none';
+				}
+			}
+		</script>
+
+  </head>
+  
+  <body onload="initialize()">
+    <div id="map_canvas"></div>
+    
+    <form id="selection">
+    	<!-- Franchise -->
+		<h2><a onclick ="javascript:ShowHide('franchiseCheckbox')" href="javascript:;" >Franchise</a></h2>
+		<div class="selection" id="franchiseCheckbox" style="DISPLAY: none" >
+			This text was hidden
+			Here are check boxes for franchises. Northeast etc
+		</div>
+		<div class="selection" id="dateRange">
+			<h2>Date range</h2>
+		</div>
+		
+		<div>
+			<h2>Young People</h2>
+			<!-- Age -->
+			<h3><a onclick ="javascript:ShowHide('ageCheckbox')" href="javascript:;" >Age</a></h3>
+			<div class="selection" id="ageCheckbox" style="DISPLAY: none" >
+				age place holder
+			</div>
+			<!-- Gender -->
+				<input class="selection" id="sex_both" type="radio" name="sex" value="both" checked>both<br>
+				<input class="selection" id="sex_male" type="radio" name="sex" value="male">Male<br>
+				<input class="selection" id="sex_female" type="radio" name="sex" value="female">Female
+			<script type="text/javascript">
+			
+			</script>
+			
+			<!-- Ethic -->
+			<h3><a onclick ="javascript:ShowHide('ethicCheckbox')" href="javascript:;" >Ethic</a></h3>
+			<div class="mid" id="ethicCheckbox" style="DISPLAY: none" >
+				ethic place holder
+			</div>
+			
+			<!-- Disability -->
+			<h3><a onclick ="javascript:ShowHide('disabilityCheckbox')" href="javascript:;" >Disability</a></h3>
+			<div class="mid" id="disabilityCheckbox" style="DISPLAY: none" >
+				disability place holder
+			</div>
+			
+		</div>
+	 </form>
+	  
+    
+  </body>
+</html>
