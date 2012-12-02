@@ -37,10 +37,16 @@ class GetData(webapp2.RequestHandler):
         sex = self.request.get("sex")
         # Get postcode from data set
         json_response = ""
-        for data in Data.datas:
-            
-
-            postcode = data["Postcode"]
+        count = 0
+        
+        if (sex == "Both"):
+            json_response =  Data.datas
+        else:
+            for data in Data.datas:
+                if (data["Gender"] == sex):
+                    json_response = json_response + data
+                
+       
             
             # You have post code now. 
             
@@ -49,8 +55,7 @@ class GetData(webapp2.RequestHandler):
             #...
             
             #Pretend that you have geo info back
-            data['lat'] = 51.501009611553926 + float(data['KeyFundStage'])
-            data['long'] = -0.141587067110009 + float(data['KeyFundStage'])
+            
             #TODO send back JSON
         # convert postcode to geographical information
         
@@ -73,21 +78,21 @@ class Data:
              "GroupProjectMemberID": "10001",
              "GROUPID": "200",
              "KeyFundStage": "1",
-             "Gender": "Male",
+             "Gender": "1",
              "Postcode": "SO17 2HQ"
     }, {
         "GroupProjectID": "0002",
         "GroupProjectMemberID": "10001",
         "GROUPID": "201",
         "KeyFundStage": "3",
-        "Gender": "Female",
+        "Gender": "0",
         "Postcode": "SO17 2LB"
     }, {
         "GroupProjectID": "0003",
         "GroupProjectMemberID": "10001",
         "GROUPID": "202",
         "KeyFundStage": "4",
-        "Gender": "Male",
+        "Gender": "1",
         "Postcode": "SO15 2DB"
     }]
     
