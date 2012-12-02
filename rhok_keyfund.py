@@ -48,6 +48,21 @@ def count_list_dict_item(in_list_dict, item):
         hist[key] = hist.get(key, 0) + 1
     return hist
 
+def location_add(in_list_dict, item, location_dict):
+    """Add Longitude and Latitude data and return updated list_dictionary
+    
+location dict"""
+    for i in_list_dict:
+        postcode = i.get(item)
+        lead_block = postcode[:-3].strip()
+
+
+
+
+
+
+
+
 def is_male(in_list_dict, item):
     temp_gender_hist = count_list_dict_item(in_list_dict,item)
     gender_hist = {}
