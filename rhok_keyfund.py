@@ -65,10 +65,24 @@ def pmf(hist, my_list):
     return pmf_hist
 
 def program_prompt(record_list):
-    """Reads in the program-generated list of records and asks for prompt"""
+    """Reads in the program-generated list of records and returns prompt int"""
     print("The records are as follows:\n")
     for x, y in record_list:
-        print(x, ':\t', y)
+        n = 4 - len(str(x))
+        print(x,n*'.', y)
+    query_number = raw_input('\nPlease enter Query Number (0 or Q to quit): ')
+    if query_number == 'q' or query_number =='Q' or query_number == '0':
+        exit()
+    else:
+        try:
+            query_number = int(query_number)
+            if query_number in range(len(record_list)):
+                return query_number
+            else:
+                program_prompt(record_list)
+        except ValueError:
+            program_prompt(record_list)
+
 
 
 def main():
@@ -113,6 +127,8 @@ def main():
     #gender_test = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
     #gender_test = count_list_dict_item(my_list, fields_dict[7])
     #print(gender_test)
+
+    program_prompt(fields)
 
 
 
