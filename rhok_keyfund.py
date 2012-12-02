@@ -8,7 +8,6 @@ import sys
 import csv
 import rhok_hist_plot
 
-
 """First lets read in some data, the fields are as follows:
 (0, 'GROUPMEMBERID')
 (1, 'GROUPPROJECTID')
@@ -151,9 +150,6 @@ def main():
             output_hist = count_list_dict_item(my_list,fields_dict[query_number])
     plot_question(output_hist, query_number, fields)
     print(output_hist)
-        
-
-
 
 if __name__ == '__main__':
     main()
