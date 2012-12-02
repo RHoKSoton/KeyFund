@@ -44,14 +44,14 @@
   </head>
   
   <body onload="initialize()">
-    <div id="map_canvas"></div>
+	<div id="map_canvas"></div>	
     
     <form id="selection">
     	<!-- Franchise -->
 		<h2><a onclick ="javascript:ShowHide('franchiseCheckbox')" href="javascript:;" >Franchise</a></h2>
 		<div class="selection" id="franchiseCheckbox" style="DISPLAY: none" >
-			This text was hidden
-			Here are check boxes for franchises. Northeast etc
+			<input type="checkbox" name="franchise" value="Northeast">Northeast<br>
+			
 		</div>
 		<div class="selection" id="dateRange">
 			<h2>Date range</h2>
@@ -62,9 +62,10 @@
 			<!-- Age -->
 			<h3><a onclick ="javascript:ShowHide('ageCheckbox')" href="javascript:;" >Age</a></h3>
 			<div class="selection" id="ageCheckbox" style="DISPLAY: none" >
-				age place holder
+				<input type="checkbox" name="age" value="11to25">11 to 25<br>
 			</div>
 			<!-- Gender -->
+			<h3>Gender</h3>
 				<input class="selection" id="sex_both" type="radio" name="sex" value="both" checked>both<br>
 				<input class="selection" id="sex_male" type="radio" name="sex" value="male">Male<br>
 				<input class="selection" id="sex_female" type="radio" name="sex" value="female">Female
@@ -83,10 +84,7 @@
 			<div class="mid" id="disabilityCheckbox" style="DISPLAY: none" >
 				disability place holder
 			</div>
-			
-		</div>
 	 </form>
-	  
-    
+	
   </body>
 </html>

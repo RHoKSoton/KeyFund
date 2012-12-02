@@ -11,6 +11,9 @@ body { height: 100%; margin: 0; padding: 0 }
 #selection
 {
   position: absolute;
-  top: 10px;  /* adjust value accordingly */
-  left: 80%;  /* adjust value accordingly */
+  top: 50px;  /* adjust value accordingly */
+  left: 90%;  /* adjust value accordingly */
+  background: white;
+  border: 5px solid rgba(0,0,0,0.3);
+  opacity:0.75;
 }
