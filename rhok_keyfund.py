@@ -157,8 +157,9 @@ def main():
         value_fields.append((key_val, num))
     fields_dict = dict(fields)
     key_values_dict = dict(value_fields)
-    new_dict = {}
-    location_add(filename, my_list,fields_dict.get(5),new_dict)
+    
+    #new_dict = {}
+    #location_add(filename, my_list,fields_dict.get(5),new_dict)
 
     #print(fields_dict)
 
@@ -174,11 +175,10 @@ def main():
     #plot_age = rhok_hist_plot.get_data(age_freq)
 
     #rhok_hist_plot.plot_hist(age_freq, fields_dict[11], 'Frequency')
-    #print(key_values_dict['ISMALE'])
     #gender_test = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
     #gender_test = count_list_dict_item(my_list, fields_dict[7])
     #print(gender_test)
-    """
+
     query_number = program_prompt(fields)
     if fields_dict.get(query_number) == 'ISMALE':
         output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
@@ -186,8 +186,6 @@ def main():
         if fields_dict.get(query_number) != None:
             output_hist = count_list_dict_item(my_list,fields_dict[query_number])
     plot_question(output_hist, query_number, fields)
-    print(output_hist)
-    """
 
     
     
