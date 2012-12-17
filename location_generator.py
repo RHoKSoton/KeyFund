@@ -11,11 +11,27 @@ from mapnik2 import Projection, Coord
 """
 To read in postcode data, extract the postcodes and Easting/Northing Data
 
-We require columns 0, 2 and 3.
+We require columns 0, 2 and 3 from OS Code-Point(R) Open Data Files 
+downloaded from  
+http://parlvid.mysociety.org:81/os/
+
+The OS-OpenData License is available from the following url:
+http://www.ordnancesurvey.co.uk/oswebsite/docs/licences/os-opendata-licence.pdf
+
+Contains Ordnance Survey data (c) Crown copyright and database right 2012
+Contains Royal Mail data (c) Royal Mail copyright and database right 2012  
+#Contains National Statistics data (c) Crown copyright and database right 2012 
 
 Output will be 
 
-postcode    coord1 coord2
+post code, Easting, Northing, latitude, longitude
+Note. Location coordinates are given in OSGB(E/N)
+While latitude (+ve North) and longitude (+ve East) are quoted in that order
+(WGS84 lat/long).
+
+Note: The lat/long values calculated with mapnik2 do not exactly correspond with 
+those from other sources (e.g. Google Maps, mapit.mysociety.org).
+TODO: look into this.
 
 """
 
@@ -33,7 +49,8 @@ def convert_loc(line):
 def writeData(outfilename, mos_data):
     output = open(outfilename, 'wt')
     for k in mos_data:
-        output.write(k[0] + ',' + k[1] + ',' + k[2] + '\n')
+        output.write(",".join(k) + '\n')
+        #output.write(k[0] + ',' + k[1] + ',' + k[2] + + k[3] + + k[4] '\n')
     output.close()
 
 
@@ -43,8 +60,10 @@ def processCSV(filename, table_list):
         temp = []
         c = convert_loc(line)
         temp.append(line[0])
-        temp.append(str(c.y))
-        temp.append(str(c.x))
+        temp.append(line[2])     # Easting 
+        temp.append(line[3])     # Northing
+        temp.append(str(c.y))           # Lat.
+        temp.append(str(c.x))           # Long.
         table_list.append(temp)
 
 
