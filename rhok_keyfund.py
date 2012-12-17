@@ -32,13 +32,24 @@ import rhok_hist_plot
 (20, 'DOB')
 """
 
-def listBigFile(filename, my_list):
-    """The function reads in line-by-line to allow for large files."""
+def listBigFile(in_filename, my_list):
+    """Records are read into a list of dictionaries. 
     
-    fcsv = open(filename, 'r')
+The function reads in line-by-line to allow for large files."""
+    
+    fcsv = open(in_filename, 'r')
     for line in csv.DictReader(fcsv):
         d = dict(line)
         my_list.append(d)
+
+
+def count_list_dict_item(in_list_dict, item):
+    """Record frequency of key in a dictionary"""
+    hist = {}
+    for i in in_list_dict:
+        key = i.get(item)
+        hist[key] = hist.get(key, 0) + 1
+    return hist
 
 #def extract_location(filename, location_dict):
 #    """Return {nexy: [(latt, longt),]"""
@@ -58,13 +69,6 @@ def listBigFile(filename, my_list):
 #                location_dict[lead_block] = [coord]
 
 
-def count_list_dict_item(in_list_dict, item):
-    """Return frequency of key"""
-    hist = {}
-    for i in in_list_dict:
-        key = i.get(item)
-        hist[key] = hist.get(key, 0) + 1
-    return hist
 
 #def add_lat_longt(dict_field,latt,longt):
 #    dict_field['latt'] = latt
@@ -97,7 +101,7 @@ def is_male(in_list_dict, item):
     return gender_hist
 
 def pmf(hist, my_list):
-    """Takes hist from count_list_dict_item and data as input"""
+    """Calculates Probability Mass Function, returns histogram data"""
     pmf_hist = {}
     n = float(len(my_list))
     for item, frequency in hist.items():
@@ -146,11 +150,15 @@ def main():
         print('\nNo input file provided:\n' +
               'Usage: python %s filename\n' % sys.argv[0])
         exit()
-
+    
+    # put the csv data into the list of dictionaries
     my_list = []
     fields = []
     value_fields = []
     listBigFile(filename, my_list)
+    print(my_list)  # Warning: only print small data sets
+
+    # generate lookup dictionaries 
     for k in enumerate(my_list[1].keys()):
         fields.append(k)
     for num, key_val in fields:
@@ -171,7 +179,6 @@ def main():
     #for k  in enumerate(my_list[1].keys()):
     #    print(k,)
 
-
     #plot_age = rhok_hist_plot.get_data(age_freq)
 
     #rhok_hist_plot.plot_hist(age_freq, fields_dict[11], 'Frequency')
@@ -179,16 +186,15 @@ def main():
     #gender_test = count_list_dict_item(my_list, fields_dict[7])
     #print(gender_test)
 
-    query_number = program_prompt(fields)
-    if fields_dict.get(query_number) == 'ISMALE':
-        output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
-    else: 
-        if fields_dict.get(query_number) != None:
-            output_hist = count_list_dict_item(my_list,fields_dict[query_number])
-    plot_question(output_hist, query_number, fields)
-
-    
-    
+    # Command line program interface
+    #query_number = program_prompt(fields)
+    #if fields_dict.get(query_number) == 'ISMALE':
+    #    output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
+    #else: 
+    #    if fields_dict.get(query_number) != None:
+    #        output_hist = count_list_dict_item(my_list,
+    #                                           fields_dict[query_number])
+    #plot_question(output_hist, query_number, fields)
 
 
 if __name__ == '__main__':
