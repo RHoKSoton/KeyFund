@@ -156,7 +156,7 @@ def main():
     fields = []
     value_fields = []
     listBigFile(filename, my_list)
-    print(my_list)  # Warning: only print small data sets
+#    print(my_list)  # Warning: only print small data sets
 
     # generate lookup dictionaries 
     for k in enumerate(my_list[1].keys()):
@@ -187,14 +187,14 @@ def main():
     #print(gender_test)
 
     # Command line program interface
-    #query_number = program_prompt(fields)
-    #if fields_dict.get(query_number) == 'ISMALE':
-    #    output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
-    #else: 
-    #    if fields_dict.get(query_number) != None:
-    #        output_hist = count_list_dict_item(my_list,
-    #                                           fields_dict[query_number])
-    #plot_question(output_hist, query_number, fields)
+    query_number = program_prompt(fields)
+    if fields_dict.get(query_number) == 'ISMALE':
+        output_hist = is_male(my_list,fields_dict[key_values_dict['ISMALE']])
+    else: 
+        if fields_dict.get(query_number) != None:
+            output_hist = count_list_dict_item(my_list,
+                                               fields_dict[query_number])
+    plot_question(output_hist, query_number, fields)
 
 
 if __name__ == '__main__':
