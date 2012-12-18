@@ -9,6 +9,7 @@ import csv
 import rhok_hist_plot
 
 """First lets read in some data, the fields are as follows:
+    Note these are ordered by the python dictionary.
 (0, 'GROUPMEMBERID')
 (1, 'GROUPPROJECTID')
 (2, 'SUM_TYPO3')
@@ -42,6 +43,13 @@ The function reads in line-by-line to allow for large files."""
         d = dict(line)
         my_list.append(d)
 
+
+def writeData(mos_data):
+    output = open('hist.csv', 'wt')
+    for k in mos_data:
+        output.write(k[0] + ',' + str(k[1]) + '\n')
+        #output.write(k[0] + ',' + k[1] + ',' + k[2] + + k[3] + + k[4] '\n')
+    output.close()
 
 def count_list_dict_item(in_list_dict, item):
     """Record frequency of key in a dictionary"""
@@ -114,8 +122,8 @@ def program_prompt(record_list):
     for x, y in record_list:
         n = 4 - len(str(x))
         print(x,n*'.', y)
-    query_number = raw_input('\nPlease enter Query Number (0 or Q to quit): ')
-    if query_number == 'q' or query_number =='Q' or query_number == '0':
+    query_number = raw_input('\nPlease enter Query Number (Q to quit): ')
+    if query_number == 'q' or query_number =='Q':
         exit()
     else:
         try:
@@ -140,6 +148,7 @@ def plot_question(output_hist, query_number, fields):
         rhok_hist_plot.plot_hist(output_hist, fields[query_number], 'Frequency')
     elif question.lower() == 'n':
         print(output_hist)
+        writeData(output_hist.items())
     else:
         exit()
     
