@@ -21,7 +21,7 @@ def main():
     con = lite.connect(dbFilename)
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM rhok_keyfund_data")
+    cur.execute("SELECT person_id, postcode_blk1, postcode_blk2 FROM rhok_keyfund_data")
 
     while True:
         row = cur.fetchone()
