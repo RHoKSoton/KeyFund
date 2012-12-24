@@ -27,8 +27,10 @@ def main():
         row = cur.fetchone()
         if row == None:
             break
-    
-        print row
+        if row[2] == ' ':
+            print "None"
+        else:
+            print row[2]
 
 if __name__=='__main__':
     main()
