@@ -26,11 +26,11 @@ The data is to be placed in an SQLite table, created as follows:
 
 create table postcode_location_data
 (
-    location_id INT AUTOINCREMENT PRIMARY KEY,
+    location_id INTEGER PRIMARY KEY AUTOINCREMENT,
     postcode_blk1 TEXT,
     postcode_blk2 TEXT,
-    easting INT,
-    northing INT,
+    easting INTEGER,
+    northing INTEGER,
     latitude REAL,
     longitude REAL
 );
