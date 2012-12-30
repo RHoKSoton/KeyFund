@@ -3,6 +3,7 @@
 
 import sqlite3 as lite
 import sys
+import random
 
 """
 This program's purpose is to read in person_id, postcode_blk1, and 
@@ -42,6 +43,44 @@ def create_table(dbCursor):
     """
     )
 
+def pick_random_coordinates(rows, required_number):
+    if required_number == 1:
+        random_index = [0]
+    else:
+        number_rows = len(rows)
+        random_index = []
+        while required_number > 0:
+            random_index.append(random.randrange(number_rows))
+            required_number -= 1
+    coordinate_list = []
+    for i in random_index:
+        coordinate_list.append(rows[i])
+    return coordinate_list
+
+def find_coordinates(dbCursor, 
+                     postcode_blk1, postcode_blk2=' '):
+    if postcode_blk2 == ' ':
+        cmd = """select * from postcode_location_data
+              where postcode_blk1 = '%s'
+              """ % postcode_blk1
+    else:
+        cmd = """select * from postcode_location_data
+              where postcode_blk1 = '%s'
+              and postcode_blk2 LIKE '%s'""" % (postcode_blk1, 
+                                                postcode_blk2 + '%') 
+    dbCursor.execute(cmd)
+    return dbCursor.fetchall()
+
+def count_people(dbCursor, postcode_blk1, postcode_blk2=' '):
+    """Return the number of people with corresponding postcode fragments"""
+    cmd = """select count(*) from rhok_keyfund_data
+          where postcode_blk1 = '%s'
+          and postcode_blk2 like '%s'
+          """ % (postcode_blk1, postcode_blk2 + '%')
+    dbCursor.execute(cmd)
+    return dbCursor.fetchone()[0]
+
+
 def insert_data(dbCursor,param_tuple):
     dbCursor.execute(
         """INSERT INTO allocated_location (
@@ -57,11 +96,6 @@ def dict_key(postcode_blk1, postcode_blk2):
     else:
         return ' '.join((postcode_blk1, postcode_blk2))
 
-
-
-
-
-
 def main():
 
     try:
@@ -70,20 +104,48 @@ def main():
         usage_msg()
         sys.exit(1)
 
-    con = lite.connect(dbFilename)
-    cur = con.cursor()
+    try:
+        con = lite.connect(dbFilename)
+        con2 = lite.connect(dbFilename)
+        cur = con.cursor()
+        cur2 = con2.cursor()
+        con_pc = lite.connect('postcode_data.db')
+        cur_pc = con_pc.cursor()
 
-    cur.execute("SELECT person_id, postcode_blk1, postcode_blk2 
-                 FROM rhok_keyfund_data")
+        ## Program logic
+        
+        #cur.execute("""ATTACH 'postcode_data.db' AS postcodes;""")
 
-    while True:
-        row = cur.fetchone()
-        if row == None:
-            break
-        if row[2] == ' ':
-            print "None"
-        else:
-            print row[2]
+        cur.execute("""SELECT person_id, postcode_blk1, postcode_blk2  
+                     FROM rhok_keyfund_data;""")
+
+    
+        while True:
+            row = cur.fetchone()
+            if row == None:
+                break
+            #if row[2] == ' ':
+            #    print "None"
+            else:
+                print row
+                coordinate_rows = find_coordinates(cur_pc,row[1],row[2])
+                required_number = count_people(cur2,row[1],row[2])
+                print required_number 
+                coordinate_list = pick_random_coordinates(coordinate_rows,
+                                                       required_number)
+                print coordinate_list 
+
+
+    except lite.Error, e:
+        if con:
+            con.rollback()
+
+        print "Error %s: " % e.args[0]
+        sys.exit(1)
+
+    finally:
+        if con:
+            con.close()
 
 if __name__=='__main__':
     main()
