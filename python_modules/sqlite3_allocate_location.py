@@ -118,6 +118,9 @@ def main():
 
         cur.execute("""SELECT person_id, postcode_blk1, postcode_blk2  
                      FROM rhok_keyfund_data;""")
+        
+        location_dict = {}
+
 
     
         while True:
@@ -127,13 +130,19 @@ def main():
             #if row[2] == ' ':
             #    print "None"
             else:
-                print row
-                coordinate_rows = find_coordinates(cur_pc,row[1],row[2])
-                required_number = count_people(cur2,row[1],row[2])
-                print required_number 
-                coordinate_list = pick_random_coordinates(coordinate_rows,
-                                                       required_number)
-                print coordinate_list 
+                k = dict_key(row[1],row[2])
+                if k in location_dict:
+                    print 'yay'
+                else:
+                    print row
+                    coordinate_rows = find_coordinates(cur_pc,row[1],row[2])
+                    required_number = count_people(cur2,row[1],row[2])
+                    print required_number 
+                    coordinate_list = pick_random_coordinates(coordinate_rows,
+                                                           required_number)
+                    location_dict[k] = coordinate_list
+            print location_dict.keys()
+
 
 
     except lite.Error, e:
