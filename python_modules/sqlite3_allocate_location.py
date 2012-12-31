@@ -124,9 +124,10 @@ def main():
         cur_pc = con_pc.cursor()
 
         ## Program logic
-        
-        #cur.execute("""ATTACH 'postcode_data.db' AS postcodes;""")
 
+        cur.execute("""SELECT COUNT(*) FROM rhok_keyfund_data;""")
+        number_records = cur.fetchone()[0]
+        
         cur.execute("""SELECT person_id, postcode_blk1, postcode_blk2  
                      FROM rhok_keyfund_data;""")
         
@@ -149,7 +150,8 @@ def main():
                                                            required_number)
                     location_dict[k] = coordinate_list
                     insert_data(cur_write, location_dict, k, row[0])
-                    sys.stdout.write("Inserting record: %s \r" % row[0])
+                    sys.stdout.write("Inserting record: %s / %s \r" 
+                                     % (row[0], number_records))
                     sys.stdout.flush()
             #print location_dict.keys()
 
