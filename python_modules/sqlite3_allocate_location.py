@@ -31,11 +31,11 @@ def usage_msg():
     print "\n"
 
 def create_table(dbCursor):
+        #DROP TABLE IF EXISTS allocated_location;
     dbCursor.executescript(
     """
-        DROP TABLE IF EXISTS allocated_location;
         CREATE TABLE allocated_location(
-        person_id INTEGER,
+        person_id INTEGER UNIQUE,
         easting INTEGER,
         northing INTEGER,
         latitude REAL,
@@ -60,11 +60,13 @@ def pick_random_coordinates(rows, required_number):
 def find_coordinates(dbCursor, 
                      postcode_blk1, postcode_blk2=' '):
     if postcode_blk2 == ' ':
-        cmd = """select * from postcode_location_data
+        cmd = """select easting, northing, latitude, longitude  
+              from postcode_location_data
               where postcode_blk1 = '%s'
               """ % postcode_blk1
     else:
-        cmd = """select * from postcode_location_data
+        cmd = """select easting, northing, latitude, longitude
+              from postcode_location_data 
               where postcode_blk1 = '%s'
               and postcode_blk2 LIKE '%s'""" % (postcode_blk1, 
                                                 postcode_blk2 + '%') 
@@ -80,21 +82,25 @@ def count_people(dbCursor, postcode_blk1, postcode_blk2=' '):
     dbCursor.execute(cmd)
     return dbCursor.fetchone()[0]
 
-
-def insert_data(dbCursor,param_tuple):
-    dbCursor.execute(
-        """INSERT INTO allocated_location (
-        person_id, easting, northing, latitude, longitude)
-        VALUES
-        (?, ?, ?, ?, ?)
-        """, param_tuple
-    )
-
 def dict_key(postcode_blk1, postcode_blk2):
     if postcode_blk2 == ' ':
         return postcode_blk1
     else:
         return ' '.join((postcode_blk1, postcode_blk2))
+
+def insert_data(dbCursor, location_dict, dict_key, person_id):
+    l = location_dict[dict_key].pop()
+    param_list = [person_id]
+    for coord in l:
+        param_list.append(coord)
+    dbCursor.execute(
+        """INSERT INTO allocated_location (
+        person_id, easting, northing, latitude, longitude)
+        VALUES
+        (?, ?, ?, ?, ?)
+        """, param_list
+    )
+
 
 def main():
 
@@ -106,9 +112,14 @@ def main():
 
     try:
         con = lite.connect(dbFilename)
-        con2 = lite.connect(dbFilename)
         cur = con.cursor()
-        cur2 = con2.cursor()
+
+        try:
+            create_table(cur)
+        except lite.Error:
+            print "Appending to existing table"    
+        cur2 = con.cursor()
+        cur_write = con.cursor() 
         con_pc = lite.connect('postcode_data.db')
         cur_pc = con_pc.cursor()
 
@@ -127,21 +138,22 @@ def main():
             row = cur.fetchone()
             if row == None:
                 break
-            #if row[2] == ' ':
-            #    print "None"
             else:
                 k = dict_key(row[1],row[2])
                 if k in location_dict:
-                    print 'yay'
+                    insert_data(cur_write, location_dict, k, row[0])
                 else:
-                    print row
                     coordinate_rows = find_coordinates(cur_pc,row[1],row[2])
                     required_number = count_people(cur2,row[1],row[2])
-                    print required_number 
                     coordinate_list = pick_random_coordinates(coordinate_rows,
                                                            required_number)
                     location_dict[k] = coordinate_list
-            print location_dict.keys()
+                    insert_data(cur_write, location_dict, k, row[0])
+                    sys.stdout.write("Inserting record: %s \r" % row[0])
+                    sys.stdout.flush()
+            #print location_dict.keys()
+
+        con.commit()
 
 
 
@@ -156,5 +168,5 @@ def main():
         if con:
             con.close()
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()
