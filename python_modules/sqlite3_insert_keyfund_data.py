@@ -12,6 +12,27 @@ import time
 set textwidth=79
 This module reads in keyfund data from final_data_demographics.csv 
 
+It corrects postcodes entered in lower case, and attempts to 
+accommodate for malformed postcode entries. 
+
+Possible postcode formats are as follows:
+    A9   9AA
+    A9A  9AA (London)
+    A99  9AA
+    AA9  9AA
+    AA9A 9AA (London)
+    AA99 9AA
+
+If postcodes are entered without a space, but we know they are complete, 
+we can correct for lack of separation by slicing the last 3 characters.
+
+Incomplete postcodes entered without a space are not adequately accommodated
+at present. We need to be able to distinguish between AA9 9 and AA99. At
+present we assume AA99. Invalid postcode fragments will be rejected by
+the location allocation program.
+
+Fragments that are valid and incorrect will present a source of error.
+
 The data is to be placed in an SQLite table, created as follows:
 
         create table rhok_keyfund_data
@@ -70,14 +91,22 @@ def dbInsertCSV(filename,dbCursor):
         dob = "%s-%s-%s" % (k.tm_year, k.tm_mon, k.tm_mday)
         ethnicityref = line[17]
         disabilityref = line[18]
-        postcode = line[19]
+        postcode = line[19].upper()
         m = postcode.split()
         if len(m) == 0:
             postcode_blk1 = ' '
             postcode_blk2 = ' '
         elif len(m) == 1:
-            postcode_blk1 = m[0]
-            postcode_blk2 = ' '
+            if len(m[0]) >= 6:
+                postcode_blk1 = m[0][:-3]
+                postcode_blk2 = m[0][-3:]
+            elif len(m[0]) <= 4:
+                postcode_blk1 = m[0]
+                postcode_blk2 = ' '
+            else:
+                # consider alternatives, but postcodes can = 5 chars (+space)
+                postcode_blk1 = m[0]
+                postcode_blk2 = ' '
         else:
             postcode_blk1 = m[0]
             postcode_blk2 = m[1]

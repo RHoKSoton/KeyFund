@@ -9,8 +9,9 @@ try:
 
 except IndexError:
 
-    print "\n\nExpected usage:\n"
-    print sys.argv[0], "filename.db\n\n"
+    print "\nExpected usage:"
+    print sys.argv[0], "filename.db\n"
+    sys.exit(1)
 
 con = lite.connect(dbFilename)
 

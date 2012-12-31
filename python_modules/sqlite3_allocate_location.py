@@ -48,6 +48,10 @@ def pick_random_coordinates(rows, required_number):
         random_index = [0]
     else:
         number_rows = len(rows)
+        if number_rows == 0:
+            print "Row length == 0"
+            print rows
+            print "....................\n"
         random_index = []
         while required_number > 0:
             random_index.append(random.randrange(number_rows))
@@ -59,6 +63,7 @@ def pick_random_coordinates(rows, required_number):
 
 def find_coordinates(dbCursor, 
                      postcode_blk1, postcode_blk2=' '):
+    postcode_blk1 = postcode_blk1.upper()
     if postcode_blk2 == ' ':
         cmd = """select easting, northing, latitude, longitude  
               from postcode_location_data
@@ -68,8 +73,8 @@ def find_coordinates(dbCursor,
         cmd = """select easting, northing, latitude, longitude
               from postcode_location_data 
               where postcode_blk1 = '%s'
-              and postcode_blk2 LIKE '%s'""" % (postcode_blk1, 
-                                                postcode_blk2 + '%') 
+              and postcode_blk2 LIKE '%s'""" % (postcode_blk1,
+                                                postcode_blk2.upper()+ '%')
     dbCursor.execute(cmd)
     return dbCursor.fetchall()
 
@@ -132,32 +137,49 @@ def main():
                      FROM rhok_keyfund_data;""")
         
         location_dict = {}
-
-
+        processed_no = 0
+        skipped_records = 0
+        bad_postcode = 0
     
         while True:
             row = cur.fetchone()
             if row == None:
                 break
             else:
-                k = dict_key(row[1],row[2])
-                if k in location_dict:
-                    insert_data(cur_write, location_dict, k, row[0])
+                processed_no += 1
+                if row[1] == ' ':
+                    skipped_records += 1
+                    pass
                 else:
-                    coordinate_rows = find_coordinates(cur_pc,row[1],row[2])
-                    required_number = count_people(cur2,row[1],row[2])
-                    coordinate_list = pick_random_coordinates(coordinate_rows,
-                                                           required_number)
-                    location_dict[k] = coordinate_list
-                    insert_data(cur_write, location_dict, k, row[0])
-                    sys.stdout.write("Inserting record: %s / %s \r" 
-                                     % (row[0], number_records))
-                    sys.stdout.flush()
+                    k = dict_key(row[1],row[2])
+                    if k in location_dict:
+                        insert_data(cur_write, location_dict, k, row[0])
+                    else:
+                        coordinate_rows = find_coordinates(cur_pc,row[1],
+                                                           row[2])
+                        if len(coordinate_rows) == 0:
+                            skipped_records += 1
+                            bad_postcode += 1
+                            pass
+                        else:
+                            required_number = count_people(cur2,row[1],row[2])
+                            coordinate_list = pick_random_coordinates(
+                                    coordinate_rows, required_number)
+                            location_dict[k] = coordinate_list
+                            insert_data(cur_write, location_dict, k, row[0])
+
+                        sys.stdout.write(
+                            "Processed records: %s / %s, skipped: %s \r" 
+                                         % (processed_no, number_records, 
+                                            skipped_records))
+                        sys.stdout.flush()
+
             #print location_dict.keys()
 
         con.commit()
-
-
+        print "Processed records: %s / %s" % (processed_no, number_records)
+        print "Skipped (no postcode data): %s" % (skipped_records)
+        print "Skipped (invalid postcode): %s" % (bad_postcode)
 
     except lite.Error, e:
         if con:
