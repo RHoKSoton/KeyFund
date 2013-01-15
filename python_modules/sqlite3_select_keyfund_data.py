@@ -21,7 +21,7 @@ def main():
     con = lite.connect(dbFilename)
     cur = con.cursor()
 
-    cur.execute("SELECT person_id, postcode_blk1, postcode_blk2 FROM rhok_keyfund_data")
+    cur.execute("SELECT person_id, postcode_blk1, postcode_blk2 FROM rhok_keyfund_data limit 10")
 
     while True:
         row = cur.fetchone()
@@ -30,7 +30,7 @@ def main():
         if row[2] == ' ':
             print "None"
         else:
-            print row[2]
+            print row
 
 if __name__=='__main__':
     main()
